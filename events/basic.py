@@ -46,7 +46,7 @@ def push_msg(event,msg):
         line_bot_api.push_message(room_id,TextSendMessage(text=msg))
 
 def Usage(event):
-    push_msg(event, "       👉查詢方法👈       \
+    push_msg(event, "👉查詢方法👈\
              \n \
              \nkiwi可以查詢\n📌油價\n📌匯率\n📌股價\
              \n\n📌油價通知\n    ➡輸入「油價查詢」 \
