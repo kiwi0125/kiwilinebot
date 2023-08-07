@@ -88,7 +88,23 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=content))
 
+
+#######跟隨機器人後會做的事件#########
+@handler.add(FollowEvent)
+def handler_follow(event):
+    welcome_msg = """Hello! 恭喜您成為kiwi機器人的第100個好友
+這邊提供了一些功能，這段只是歡迎訊息而已
+才不希望你點進來呢！"""
+    line_bot_api.reply_message(
+        event.reply_token, 
+        TextSendMessage(text=welcome_msg))
     
+#######解除跟隨後會做的事件########
+@handler.add(UnfollowEvent)
+def handle_unfollow(event):
+    print(event)
+
+
 
 if __name__=="__main__":
     app.run()
