@@ -74,6 +74,10 @@ def callback():
 #只要是對輸入訊息(message_text)的處理，都在這裡
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    #可以傳回使用者ID
+    profile = line_bot_api.get_profile(event.source.user_id)
+    uid = profile.user_id
+
     message_text = str(event.message.text).lower()
 
     ######使用說明#######
@@ -87,6 +91,11 @@ def handle_message(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content))
+        
+    ######股票查詢#####
+    if message_text == "@股價查詢":
+        #傳回使用者id跟後面的字串
+        line_bot_api.push_message(uid,TextSendMessage("請輸入#股票代碼"))
 
 
 #######跟隨機器人後會做的事件#########
@@ -102,7 +111,7 @@ def handler_follow(event):
 #######解除跟隨後會做的事件########
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
-    print(event)
+    print(event) #這邊傳回事件會傳回一大串資料，其中一個是解除跟隨的使用者ID
 
 
 
