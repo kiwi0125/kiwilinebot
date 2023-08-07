@@ -48,8 +48,11 @@ def push_msg(event,msg):
 def Usage(event):
     push_msg(event, "   👉查詢方法👈   \
              \n \
-             \n kiwi可以查詢📌油價\n📌匯率\n📌股價\n \
+             \n kiwi可以查詢\n📌油價\n📌匯率\n📌股價\n \
              \n 📌油價通知\n    ➡輸入「油價查詢」 \
+             \n \
              \n 📌匯率通知\n    ➡輸入「查詢匯率」 \
+             \n \
              \n 📌匯率兌換\n    ➡換匯USD/TWD \
+             \n \
              \n 📌股價查詢\n    ➡輸入#股票代號")
