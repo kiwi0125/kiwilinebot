@@ -11,7 +11,7 @@ line_bot_api = LineBotApi("wR6RWNy+d1LEYGfPCD0AbGehrEI+cPTQxChN5KftrpfD7JZbuwKIo
 handler = WebhookHandler("5c7720c80fc66096c32f76253778ded8")
 
 #監聽所有來自/callback的Post Request
-@app.route("/callback", method=["POST"])
+@app.route("/callback", methods=["POST"])
 def callback():
     #get X-Line-Signature header value
     signature = request.headers["X-Line_Signature"]
