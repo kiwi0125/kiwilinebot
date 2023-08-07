@@ -91,18 +91,18 @@ def handle_message(event):
                         label = "油價查詢",
                         text = "油價查詢"
                     ),
-                        MessageTemplateAction(
-                            label = "匯率查詢",
-                            text = "匯率查詢"
+                    MessageTemplateAction(
+                        label = "匯率查詢",
+                        text = "匯率查詢"
                     ),
-                        MessageTemplateAction(
-                            label = "股價查詢",
-                            text = "股價查詢"
+                    MessageTemplateAction(
+                        label = "股價查詢",
+                        text = "股價查詢"
                     )
                 ]
             )
         )
         line_bot_api.reply_message(event.reply_token, buttons_template)
-        
+
 if __name__=="__main__":
     app.run()
