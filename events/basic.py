@@ -61,7 +61,8 @@ Hello! 恭喜您成為kiwi機器人的第100個好友
     line_bot_api.reply_message(
         event.reply_token,
         [text_message, sticker_message, buttons_template])
-    
+
+#####推訊息的函數#####
 def push_msg(event,msg):
     try:
         user_id = event.source.user_id
@@ -70,6 +71,7 @@ def push_msg(event,msg):
         room_id = event.source.room_id
         line_bot_api.push_message(room_id,TextSendMessage(text=msg))
 
+#####傳回使用說明的函數#####
 def Usage(event):
     push_msg(event, "👉查詢方法\
              \n \
@@ -78,3 +80,4 @@ def Usage(event):
              \n\n📌匯率通知\n    ➡輸入「查詢匯率」 \
              \n\n📌匯率兌換\n    ➡換匯USD/TWD \
              \n\n📌股價查詢\n    ➡輸入#股票代號")
+    
