@@ -79,12 +79,14 @@ def handle_message(event):
         about_us_event(event)
         Usage(event)
     
-    if event.message.text == "@使用說明":
+    if event.message.text == "@小幫手":
+        #建立一個template message
         buttons_template = TemplateSendMessage(
             alt_text="小幫手 template",
             template=ButtonsTemplate(
                 title="選擇服務",
                 text="請選擇",
+                #這邊放tempalte message的圖片網址
                 thumbnail_image_url="https://i.imgur.com/QqZ7Bix.jpg",
                 actions=[
                     MessageTemplateAction(
