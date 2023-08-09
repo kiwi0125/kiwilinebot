@@ -103,13 +103,13 @@ def handle_message(event):
         #push_message需要的參數:傳訊息的對象、要傳的訊息
         line_bot_api.push_message(uid,TextSendMessage("請輸入#股票代碼"))
 
-    if re.match("想知道股價[0-9]", msg):
-        stockNumber = msg[2:6]
+    if re.match("想知道股價", msg):
+        stockNumber = msg[6:10]
         btn_msg = stock_reply_other(stockNumber)
         line_bot_api.push_message(uid, btn_msg)
         return 0
     
-    if(emsg.startswith("#")):
+    if (emsg.startswith("#")):
         text = emsg[1:]
         content = ""
 
@@ -120,7 +120,8 @@ def handle_message(event):
         content += "%s (%s) %s\n" %(
             stock_rt["info"]["name"],
             stock_rt["info"]["code"],
-            my_time)
+            my_time
+            )            
         content += "現價: %s / 開盤: %s\n"%(
             stock_rt["realtime"]["latest_trade_price"],
             stock_rt["realtime"]["open"]
@@ -129,6 +130,7 @@ def handle_message(event):
             stock_rt["realtime"]["high"],
             stock_rt["realtime"]["low"]
             )
+        
         content += "量: %s\n" %(stock_rt["realtime"]["accumulate_trade_volume"])
 
         stock = twstock.Stock(text)
@@ -138,7 +140,7 @@ def handle_message(event):
         date5 = stock.date[-5:][::-1]
         for i in range(len(price5)):
             content += "[%s] %s\n" %(date5[i].strftime("%Y-%m-%d"), price5[i])
-            
+
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content)
