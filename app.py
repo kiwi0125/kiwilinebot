@@ -112,9 +112,9 @@ def handle_message(event):
         line_bot_api.push_message(uid, btn_msg)
         return 0
     
-    #只要偵測到使用者輸入"關注
+    #只要偵測到使用者輸入"關注(股票代碼4碼)(大於或小於)(值)"就會將這些參數放到model資料夾的mongodb.py
     if re.match("關注[0-9]{4}[<>][0-9]",msg):
-        stockNumber = msg[2:]
+        stockNumber = msg[2:6]
         content = write_my_stock(uid, user_name, stockNumber, msg[6:7], msg[7:])
         line_bot_api.push_message(uid, TextSendMessage(content))
     else:
