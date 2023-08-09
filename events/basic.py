@@ -43,15 +43,15 @@ Hello! 恭喜您成為kiwi機器人的第100個好友
                 actions=[
                     MessageTemplateAction(
                         label = "油價查詢", #按鈕上的文字
-                        text = "油價查詢"   #按下去會傳這個訊息
+                        text = "@油價查詢"   #按下去會傳這個訊息
                     ),
                     MessageTemplateAction(
                         label = "匯率查詢",
-                        text = "匯率查詢"
+                        text = "@匯率查詢"
                     ),
                     MessageTemplateAction(
                         label = "股價查詢",
-                        text = "股價查詢"
+                        text = "@股價查詢"
                     )
                 ]
             )

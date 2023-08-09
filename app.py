@@ -88,19 +88,19 @@ def handle_message(event):
     message_text = str(emsg).lower()
     msg = str(emsg).upper().strip()
 
-    ######使用說明#######
+    ############################使用說明############################
     if message_text == "@使用說明":
         about_us_event(event)
         Usage(event)
     
-    ######油價查詢#######
+    ############################油價查詢############################
     if message_text == "@油價查詢":
         content = oil_price()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content))
         
-    ######股票查詢#####
+    ############################股票查詢#############################
     if message_text == "@股價查詢":
         #push_message需要的參數:傳訊息的對象、要傳的訊息
         line_bot_api.push_message(uid,TextSendMessage("請輸入#股票代碼"))
@@ -114,8 +114,7 @@ def handle_message(event):
     
     #只要偵測到使用者輸入"關注(股票代碼4碼)(大於或小於)(值)"就會將這些參數放到model資料夾的mongodb.py
     if re.match("關注[0-9]{4}[<>][0-9]",msg):
-        stockNumber = msg[2:6]
-        line_bot_api.push_message(uid, TextSendMessage("加入股票代碼"+stockNumber))
+        stockNumber = msg[2:6]        
         content = write_my_stock(uid, user_name, stockNumber, msg[6:7], msg[7:])
         line_bot_api.push_message(uid, TextSendMessage(content))
     else:
@@ -160,7 +159,10 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=content)
             )
-
+    ############################匯率區塊############################
+    if re.match("幣別種類",emsg):
+        message = show_Button()
+        line_bot_api.reply_message(event.reply_token,message)
 
 
 
