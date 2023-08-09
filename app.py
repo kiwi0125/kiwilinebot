@@ -103,7 +103,7 @@ def handle_message(event):
         #push_message需要的參數:傳訊息的對象、要傳的訊息
         line_bot_api.push_message(uid,TextSendMessage("請輸入#股票代碼"))
 
-    if re.match("想知道股價[0,9]", msg):
+    if re.match("想知道股價[0-9]", msg):
         stockNumber = msg[5:9]
         btn_msg = stock_reply_other(stockNumber)
         line_bot_api.push_message(uid, btn_msg)
