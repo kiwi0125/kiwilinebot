@@ -2,6 +2,7 @@ from line_bot_api import *
 from events.basic import *
 from events.oil import *
 from events.Msg_template import *
+from model.mongodb import *
 import re
 import twstock
 import datetime
@@ -81,6 +82,7 @@ def handle_message(event):
     #.get_profile可以傳回使用者的個人資料(名稱、照片、狀態消息等)
     profile = line_bot_api.get_profile(event.source.user_id)
     uid = profile.user_id
+    user_name = profile.display_name #使用者名稱
 
     emsg = event.message.text
     message_text = str(emsg).lower()
@@ -103,12 +105,24 @@ def handle_message(event):
         #push_message需要的參數:傳訊息的對象、要傳的訊息
         line_bot_api.push_message(uid,TextSendMessage("請輸入#股票代碼"))
 
+    #只要偵測到使用者傳回"想知道股價"加上一個數字的字串，就會開啟快速回覆(Msg_template.py)
     if re.match("想知道股價[0-9]", msg):
         stockNumber = msg[5:9]
         btn_msg = stock_reply_other(stockNumber)
         line_bot_api.push_message(uid, btn_msg)
         return 0
     
+    #只要偵測到使用者輸入"
+    if re.match("關注[0-9{4}[<>][0-9]]",msg):
+        stockNumber = msg[2:]
+        content = write_my_stock(uid, user_name, stockNumber, msg[6:7], msg[7:])
+        line_bot_api.push_message(uid, TextSendMessage(content))
+    else:
+        content = write_my_stock(uid, user_name, stockNumber, "未設定","未設定")
+        line_bot_api.push_message(uid, TextSendMessage(content))
+        return 0       
+                                                    
+    #只要偵測到使用者傳回#開頭的文字，就會傳回股票前五日的漲幅
     if (emsg.startswith("#")):
         text = emsg[1:]
         content = ""
