@@ -1,6 +1,10 @@
 from line_bot_api import *
 from events.basic import *
 from events.oil import *
+from events.Msg_template import *
+import re
+import twstock
+import datetime
 
 app = Flask(__name__)
 
@@ -74,11 +78,13 @@ def callback():
 #只要是對輸入訊息(message_text)的處理，都在這裡
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    #可以傳回使用者ID
+    #.get_profile可以傳回使用者的個人資料(名稱、照片、狀態消息等)
     profile = line_bot_api.get_profile(event.source.user_id)
     uid = profile.user_id
 
-    message_text = str(event.message.text).lower()
+    emsg = event.message.text
+    message_text = str(emsg).lower()
+    msg = str(emsg).upper().strip()
 
     ######使用說明#######
     if message_text == "@使用說明":
@@ -94,8 +100,53 @@ def handle_message(event):
         
     ######股票查詢#####
     if message_text == "@股價查詢":
-        #傳回使用者id跟後面的字串
+        #push_message需要的參數:傳訊息的對象、要傳的訊息
         line_bot_api.push_message(uid,TextSendMessage("請輸入#股票代碼"))
+
+    if re.match("想知道股價[0-9]", msg):
+        stockNumber = msg[2:6]
+        btn_msg = stock_reply_other(stockNumber)
+        line_bot_api.push_message(uid, btn_msg)
+        return 0
+    
+    if(emsg.startswith("#")):
+        text = emsg[1:]
+        content = ""
+
+        stock_rt = twstock.realtime.get(text)
+        my_datetime = datetime.datetime.fromtimestamp(stock_rt["timestamp"]+8*60*60)
+        my_time = my_datetime.strftime("%H:%M:%S")
+
+        content += "%s (%s) %s\n" %(
+            stock_rt["info"]["name"],
+            stock_rt["info"]["code"],
+            my_time)
+        content += "現價: %s / 開盤: %s\n"%(
+            stock_rt["realtime"]["latest_trade_price"],
+            stock_rt["realtime"]["open"]
+            )
+        content += "最高: %s / 最低: %s\n"%(
+            stock_rt["realtime"]["high"],
+            stock_rt["realtime"]["low"]
+            )
+        content += "量: %s\n" %(stock_rt["realtime"]["accumulate_trade_volume"])
+
+        stock = twstock.Stock(text)
+        content += "-----\n"
+        content += "最近五日價格: \n"
+        price5 = stock.price[-5:][::-1]
+        date5 = stock.date[-5:][::-1]
+        for i in range(len(price5)):
+            content += "[%s] %s\n" %(date5[i].strftime("%Y-%m-%d"), price5[i])
+            
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content)
+            )
+
+
+
+
 
 
 #######跟隨機器人後會做的事件#########
@@ -112,6 +163,9 @@ def handler_follow(event):
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
     print(event) #這邊傳回事件會傳回一大串資料，其中一個是解除跟隨的使用者ID
+
+
+
 
 
 
