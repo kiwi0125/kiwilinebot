@@ -23,7 +23,7 @@ def stock_reply_other(stockNumber):
                                     )
     return text_message
 
-# 幣別種類Button
+# 幣別種類的flex message
 def show_Button():
     flex_message = FlexSendMessage(
             alt_text="幣別種類",

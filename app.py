@@ -162,10 +162,18 @@ def handle_message(event):
             TextSendMessage(text=content)
             )
     ############################匯率區塊############################
+    #從選單傳回外幣英文
     if re.match("幣別種類",emsg):
         message = show_Button()
         line_bot_api.reply_message(event.reply_token,message)
 
+    #使用者輸入查詢匯率XXX，就會回傳指定幣別的匯率
+    if re.match("查詢匯率[A-Z]{3}",msg):
+        msg = msg[4:]
+        content = showCurrency[msg]
+        line_bot_api.push_message(uid, TextSendMessage(content))
+
+    #使用者輸入換匯/XXX/XXX/NUM，就可以回覆轉換過後的結果
     if re.match("換匯[A-Z]{3}/[A-Z]{3}/[0-9]",msg):
         line_bot_api.push_message(uid,TextSendMessage("將為您做外匯計算..."))
         content = getExchangeRate(msg)
