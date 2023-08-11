@@ -126,7 +126,19 @@ def handle_message(event):
         content = show_stock_setting(user_name, uid)
         line_bot_api.push_message(uid, TextSendMessage(content))
         return 0
-                                                    
+
+    #刪除指定股票的選股資料
+    if re.match("刪除[0-9]{4}",msg):
+        content = delete_my_allstock(user_name, msg[2:])
+        line_bot_api.push_message(uid, TextSendMessage(content))
+        return 0
+    
+    #刪除使用者所有的選股資料
+    if re.match("清空股票",msg):
+        content = delete_my_allstock(user_name, uid)
+        line_bot_api.push_message(uid, TextSendMessage(content))
+        return 0
+                                
     #只要偵測到使用者傳回#開頭的文字，就會傳回股票前五日的漲幅
     if (emsg.startswith("#")):
         text = emsg[1:]
