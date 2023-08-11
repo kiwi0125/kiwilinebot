@@ -171,7 +171,7 @@ def handle_message(event):
             print("現在正在執行requests方法")
             soup = BeautifulSoup(list_req.content, "html.parser")
             print("現在正在建立爬蟲方法")
-            getstock = soup.findall("b")[1].text
+            getstock = soup.findAll(class_="Fz(32px) Fw(b) Lh(1) Mend(16px) D(f) Ai(c) C($c-trend-down)").text
             print("現在正在爬蟲")
             content = stock + "當前股市價格為: " +getstock
 
