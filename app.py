@@ -192,7 +192,7 @@ def handle_message(event):
             for i in range(len(dataList)):
                 for k in range(len(dataList[i])):
                     look_stock_price(dataList[i][k]['favorite_stock'], dataList[i][k]['condition'], dataList[i][k]['price'], dataList[i][k]['userID'])
-        schedule.every(30).seconds.do(job).tag("daily-tasts-stock"+uid, "second")#每10秒執行一次
+        schedule.every(10).seconds.do(job).tag("daily-tasts-stock"+uid, "second")#每10秒執行一次
         #schedule.every().hour.do(job) #每小時執行一次
         #schedule.every().day.at("17:19").do(job) #每天17:19執行一次
         #schedule.every().monday.do(job) #每周一執行一次
