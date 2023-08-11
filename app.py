@@ -160,10 +160,10 @@ def handle_message(event):
         return 0
 
     #當使用者輸入"股價提醒"的時候，會爬股市價格出來，並根據篩選條件(<>=)去判斷
-    #若股價跟
+    #若股價跟關注價格符合條件，就會回傳"符合>的執行條件"
+    #然後
     if re.match("股價提醒",msg):
-        import schedule
-        import time
+        
         def look_stock_price(stock, condition, price, userID):
             print(userID)
             url = "https://tw.stock.tahoo.com/q/q?s=" + stock
@@ -175,17 +175,17 @@ def handle_message(event):
             if condition == "<":
                 content += "\n篩選條件為: < "+price
                 if float(getstock) < float(price):
-                    content += "\n符合" + getstock + "<" + price + "的篩璇條件"
+                    content += "\n符合" + getstock + "<" + price + "的篩選條件"
                     line_bot_api.push_message(userID, TextSendMessage(text= content))
             elif condition == ">":
                 content += "\n篩選條件為: > "+price
                 if float(getstock) > float(price):
-                    content += "\n符合" + getstock + ">" + price + "的篩璇條件"
+                    content += "\n符合" + getstock + ">" + price + "的篩選條件"
                     line_bot_api.push_message(userID, TextSendMessage(text= content))
             elif condition == "=":
                 content += "\n篩選條件為: = "+price
                 if float(getstock) == float(price):
-                    content += "\n符合" + getstock + "=" + price + "的篩璇條件"
+                    content += "\n符合" + getstock + "=" + price + "的篩選條件"
                     line_bot_api.push_message(userID, TextSendMessage(text= content))
         def job():
             dataList = cache_users_stock()
