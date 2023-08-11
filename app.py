@@ -129,7 +129,7 @@ def handle_message(event):
 
     #刪除指定股票的選股資料
     if re.match("刪除[0-9]{4}",msg):
-        content = delete_my_allstock(user_name, msg[2:])
+        content = delete_my_stock(user_name, msg[2:])
         line_bot_api.push_message(uid, TextSendMessage(content))
         return 0
     
