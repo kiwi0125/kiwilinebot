@@ -170,7 +170,7 @@ def handle_message(event):
     #使用者輸入查詢匯率XXX，就會回傳指定幣別的匯率
     if re.match("查詢匯率[A-Z]{3}",msg):
         msg = msg[4:]
-        content = showCurrency[msg]
+        content = showCurrency(msg)
         line_bot_api.push_message(uid, TextSendMessage(content))
 
     #使用者輸入換匯/XXX/XXX/NUM，就可以回覆轉換過後的結果
