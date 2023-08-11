@@ -159,6 +159,10 @@ def handle_message(event):
         line_bot_api.push_message(uid, TextSendMessage(content))
         return 0
 
+    #關閉提醒
+    if re.match("關閉提醒",msg):
+        schedule.clear()
+
     #當使用者輸入"股價提醒"的時候，會根據設定好的時間，去爬股市價格出來
     #並根據篩選條件(<>=)去判斷，若股價跟關注價格符合條件，就會回傳"符合>的執行條件"
     #
