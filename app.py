@@ -164,15 +164,11 @@ def handle_message(event):
     #
     if re.match("股價提醒",msg):
         
-        def look_stock_price(stock, condition, price, userID):
-            print("現在正在執行look_stock_price函數")
+        def look_stock_price(stock, condition, price, userID):            
             url = "https://tw.stock.yahoo.com/q/q?s=" + stock
-            list_req = requests.get(url)
-            print("現在正在執行requests方法")
-            soup = BeautifulSoup(list_req.content, "html.parser")
-            print("現在正在建立爬蟲方法")
-            getstock = soup.findAll(class_="Fz(32px) Fw(b) Lh(1) Mend(16px) D(f) Ai(c) C($c-trend-down)").text
-            print("現在正在爬蟲")
+            list_req = requests.get(url)            
+            soup = BeautifulSoup(list_req.content, "html.parser")            
+            getstock = soup.findAll("span")[11].text            
             content = stock + "當前股市價格為: " +getstock
 
             if condition == "<":
