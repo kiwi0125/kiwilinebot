@@ -168,8 +168,11 @@ def handle_message(event):
             print("現在正在執行look_stock_price函數")
             url = "https://tw.stock.yahoo.com/q/q?s=" + stock
             list_req = requests.get(url)
+            print("現在正在執行requests方法")
             soup = BeautifulSoup(list_req.content, "html.parser")
+            print("現在正在建立爬蟲方法")
             getstock = soup.findall("b")[1].text
+            print("現在正在爬蟲")
             content = stock + "當前股市價格為: " +getstock
 
             if condition == "<":
