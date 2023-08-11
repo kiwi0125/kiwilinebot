@@ -192,6 +192,7 @@ def handle_message(event):
                     line_bot_api.push_message(userID, TextSendMessage(text= content))
         def job():
             dataList = cache_users_stock()
+            line_bot_api.push_message(uid, TextSendMessage("該買了吧?"))
             for i in range(len(dataList)):
                 for k in range(len(dataList[i])):
                     look_stock_price(dataList[i][k]['favorite_stock'], dataList[i][k]['condition'], dataList[i][k]['price'], dataList[i][k]['userID'])
