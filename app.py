@@ -119,10 +119,13 @@ def handle_message(event):
         content = write_my_stock(uid, user_name, stockNumber, msg[6:7], msg[7:])
         line_bot_api.push_message(uid, TextSendMessage(content))
         return 0
-    # else:
-    #     content = write_my_stock(uid, user_name, stockNumber, "未設定","未設定")
-    #     line_bot_api.push_message(uid, TextSendMessage(content))
-    #     return 0       
+    
+    #只要偵測到使用者輸入"股票清單"，就會回傳使用者的選股條件
+    if re.match("股票清單",msg):
+        line_bot_api.push_message(uid, TextSendMessage("稍等一下，股票查詢中..."))
+        content = show_stock_setting(user_name, uid)
+        line_bot_api.push_message(uid, TextSendMessage(content))
+        return 0
                                                     
     #只要偵測到使用者傳回#開頭的文字，就會傳回股票前五日的漲幅
     if (emsg.startswith("#")):
@@ -162,7 +165,7 @@ def handle_message(event):
             TextSendMessage(text=content)
             )
     ############################匯率區塊############################
-    #從選單傳回外幣英文
+    #使用者輸入"幣別種類"，就會回傳各種幣別的flex message
     if re.match("幣別種類",emsg):
         message = show_Button()
         line_bot_api.reply_message(event.reply_token,message)
