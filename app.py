@@ -159,14 +159,14 @@ def handle_message(event):
         line_bot_api.push_message(uid, TextSendMessage(content))
         return 0
 
-    #當使用者輸入"股價提醒"的時候，會爬股市價格出來，並根據篩選條件(<>=)去判斷
-    #若股價跟關注價格符合條件，就會回傳"符合>的執行條件"
-    #然後
+    #當使用者輸入"股價提醒"的時候，會根據設定好的時間，去爬股市價格出來
+    #並根據篩選條件(<>=)去判斷，若股價跟關注價格符合條件，就會回傳"符合>的執行條件"
+    #
     if re.match("股價提醒",msg):
         
         def look_stock_price(stock, condition, price, userID):
             print(userID)
-            url = "https://tw.stock.tahoo.com/q/q?s=" + stock
+            url = "https://tw.stock.yahoo.com/q/q?s=" + stock
             list_req = requests.get(url)
             soup = BeautifulSoup(list_req.content, "html.parser")
             getstock = soup.findall("b")[1].text
