@@ -7,8 +7,22 @@ from model.mongodb import *
 import re
 import twstock
 import datetime
+import schedule
+import time
 
 app = Flask(__name__)
+
+#####連接資料庫，去抓使用者的選股######
+def cache_users_stock():
+    db=constructor_stock()
+    nameList = db.list_collection_names()
+    users = []
+    for i in range(len(nameList)):
+        collect = db[nameList[i]]
+        cel = list(collect.find({"tag":"stock"}))
+        users.append(cel)
+    return users
+
 
 #自己的Channel Access Token(在Messaging API底下)
 line_bot_api = LineBotApi("wR6RWNy+d1LEYGfPCD0AbGehrEI+cPTQxChN5KftrpfD7JZbuwKIoj1Ys41AL8+S2tehpIAOJVeZihxBVyZnMi8YPeHpQT9PeMRzc+UfkGwoxcSYIc9H+5yLPh3HSvsR4cagMIIFHybDESjA0+CiewdB04t89/1O/w1cDnyilFU=")
@@ -94,6 +108,9 @@ def handle_message(event):
         about_us_event(event)
         Usage(event)
     
+
+
+
     ############################油價查詢############################
     if message_text == "@油價查詢":
         content = oil_price()
@@ -101,6 +118,9 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=content))
         
+
+
+
     ############################股票查詢#############################
     if message_text == "@股價查詢":
         #push_message需要的參數:傳訊息的對象、要傳的訊息
@@ -138,7 +158,48 @@ def handle_message(event):
         content = delete_my_allstock(user_name, uid)
         line_bot_api.push_message(uid, TextSendMessage(content))
         return 0
-                                
+
+    #當使用者輸入"股價提醒"的時候，會爬股市價格出來，並根據篩選條件(<>=)
+    if re.match("股價提醒",msg):
+        def look_stock_price(stock, condition, price, userID):
+            print(userID)
+            url = "https://tw.stock.tahoo.com/q/q?s=" + stock
+            list_req = requests.get(url)
+            soup = BeautifulSoup(list_req.content, "html.parser")
+            getstock = soup.findall("b")[1].text
+            content = stock + "當前股市價格為: " +getstock
+
+            if condition == "<":
+                content += "\n篩選條件為: < "+price
+                if float(getstock) < float(price):
+                    content += "\n符合" + getstock + "<" + price + "的篩璇條件"
+                    line_bot_api.push_message(userID, TextSendMessage(text= content))
+            elif condition == ">":
+                content += "\n篩選條件為: > "+price
+                if float(getstock) > float(price):
+                    content += "\n符合" + getstock + ">" + price + "的篩璇條件"
+                    line_bot_api.push_message(userID, TextSendMessage(text= content))
+            elif condition == "=":
+                content += "\n篩選條件為: = "+price
+                if float(getstock) == float(price):
+                    content += "\n符合" + getstock + "=" + price + "的篩璇條件"
+                    line_bot_api.push_message(userID, TextSendMessage(text= content))
+        def job():
+            dataList = cache_users_stock()
+            for i in range(len(dataList)):
+                for k in range(len(dataList[i])):
+                    look_stock_price(dataList[i][k]['favorite_stock'], dataList[i][k]['condition'], dataList[i][k]['price'], dataList[i][k]['userID'])
+        schedule.every(30).seconds.do(job).tag("daily-tasts-stock"+uid, "second")#每10秒執行一次
+        #schedule.every().hour.do(job) #每小時執行一次
+        #schedule.every().day.at("17:19").do(job) #每天17:19執行一次
+        #schedule.every().monday.do(job) #每周一執行一次
+        #schedule.every().wednesday.at("14:45").do(job) #每周三14:45執行一次
+        
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+
+                  
     #只要偵測到使用者傳回#開頭的文字，就會傳回股票前五日的漲幅
     if (emsg.startswith("#")):
         text = emsg[1:]
@@ -176,6 +237,14 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=content)
             )
+    
+
+
+
+
+
+
+
     ############################匯率區塊############################
     #使用者輸入"幣別種類"，就會回傳各種幣別的flex message
     if re.match("幣別種類",emsg):
