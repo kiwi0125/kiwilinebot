@@ -337,7 +337,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage) #MessageEvent是事件的類型、message=是訊息的類型
 def handle_message(event):
-    message = TextSendMessage(dir(event.message))
+    message = TextSendMessage(event.message.text)
     line_bot_api.reply_message(event.reply_token, message)
 
 if __name__=="__main__":
