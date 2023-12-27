@@ -289,15 +289,6 @@
 # def handle_unfollow(event):
 #     print(event) #這邊傳回事件會傳回一大串資料，其中一個是解除跟隨的使用者ID
 
-
-
-
-
-
-# if __name__=="__main__":
-#     app.run()
-
-
 from line_bot_api import *
 from events.basic import *
 from events.oil import *
@@ -337,8 +328,16 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage) #MessageEvent是事件的類型、message=是訊息的類型
 def handle_message(event):
-    message = TextSendMessage(event.message.text)
+    profile = line_bot_api.get_profile(event.source.user_id)
+    uid = profile.user_id
+    user_name = profile.display_name
+    message = TextSendMessage(event.source.user_id)
     line_bot_api.reply_message(event.reply_token, message)
 
+
+
+
 if __name__=="__main__":
-    app.run()    
+    app.run()
+
+
